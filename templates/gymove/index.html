@@ -129,16 +129,14 @@
 			<div class="col-xl-6 col-xxl-12">
     <div class="card">
 
-        <div class="card-header d-flex justify-content-between align-items-center pb-0 border-0">
+        <div class="card-header d-flex justify-content-between align-items-center pt-3 pb-2 px-4 border-0">
 
             <div>
-                <h4 class="text-white fs-20 mb-1">
+               <h4 class="text-white fs-20 fw-semibold mb-0">
                     Revenue Growth
                 </h4>
 
-                <p class="fs-13 mb-0">
-                    Monthly revenue performance
-                </p>
+            
             </div>
 
 
@@ -196,13 +194,13 @@ class="btn rounded btn-primary light">
 
 
 
-        <div class="card-body pt-3">
+        <div class="card-body px-4 pt-2 pb-3">
 
-            <div class="mb-2">
+            <div class="mb-1">
 
-                <h2 class="mb-0">
-                    ₹{{ month_revenue }}
-                </h2>
+                <h2 class="text-white fw-bold mb-2" style="font-size:1.8rem; line-height:1;">
+    ₹{{ month_revenue }}
+</h2>
 
             </div>
 
@@ -217,7 +215,7 @@ class="btn rounded btn-primary light">
 </div>
 
 
-<div class="col-xl-9 col-xxl-8">
+<div class="col-xl-9 col-xxl-4">
 
 <div class="row">
 
@@ -237,7 +235,7 @@ Recommended Trainer for You
 </h4>
 
 
-<p class="fs-13 mb-0">
+<p class="text-muted fs-12 mb-0">
 Our Active Trainers
 </p>
 
@@ -672,126 +670,141 @@ jQuery(window).on('load',function(){
     },1000);
 
 
-
-    // ==============================
-    // REVENUE GROWTH CHART
-    // ==============================
+var revenueMonths = {{ revenue_chart.months|default:"[]"|safe }};
+var revenueValues = {{ revenue_chart.revenue|default:"[]"|safe }};
 
 
-    var revenueMonths = {{ revenue_chart.months|default:"[]"|safe }};
+console.log(revenueMonths);
+console.log(revenueValues);
 
-    var revenueValues = {{ revenue_chart.revenue|default:"[]"|safe }};
-
-
-
-    if(document.querySelector("#chartBar")){
-
+    if (document.querySelector("#chartBar")) {
 
         var options = {
-
-
-            series:[{
-
-                name:"Revenue",
-
+            series: [{
+                name: "Revenue",
                 data: revenueValues
-
             }],
 
-
-           chart:{
-    type:"area",
-    height:300,
-
-    toolbar:{
-        show:false,
-
-        tools:{
-            download:true,
-            selection:false,
-            zoom:false,
-            zoomin:false,
-            zoomout:false,
-            pan:false,
-            reset:false
-        }
-
-    }
-
-},
-
-
-            xaxis:{
-
-                categories: revenueMonths
-
+            chart: {
+                type: "area",
+                height: 150,
+                background: "transparent",
+                toolbar: {
+                    show: false
+                },
+                zoom: {
+                    enabled: false
+                },
+                animations: {
+                    enabled: true,
+                    easing: "easeinout",
+                    speed: 800
+                },
+                dropShadow: {
+                    enabled: true,
+                    top: 5,
+                    blur: 8,
+                    color: "#3B82F6",
+                    opacity: 0.25
+                }
             },
 
-			yaxis:{
+            colors: ["#3B82F6"],
 
-    min:0,
+     
 
-    labels:{
+            stroke: {
+                curve: "smooth",
+                width: 4
+            },
 
-        formatter:function(value){
+            fill: {
+                type: "gradient",
+                gradient: {
+                    shade: "dark",
+                    type: "vertical",
+                    shadeIntensity: 0.3,
+                    opacityFrom: 0.35,
+                    opacityTo: 0.02,
+                    stops: [0, 100]
+                }
+            },
 
-            if(value >= 1000){
-
-                return "₹" + (value/1000) + "K";
-
-            }
-
-            return "₹" + value;
-
-        }
-
+          markers: {
+    size: 0,
+    hover: {
+        size: 0
     }
-
 },
 
+            grid: {
+                borderColor: "#2B3553",
+                strokeDashArray: 6
+            },
 
-            stroke:{
+            xaxis: {
+                categories: revenueMonths,
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    style: {
+                        colors: "#8F9BB3"
+                    }
+                }
+            },
 
-                curve:"smooth"
+            yaxis: {
+                min: 0,
+                labels: {
+                    style: {
+                        colors: "#8F9BB3"
+                    },
+                    formatter: function (value) {
+                        if (value >= 1000) {
+                            return "₹" + (value / 1000) + "K";
+                        }
+                        return "₹" + value;
+                    }
+                }
+            },
 
+            tooltip: {
+                theme: "dark",
+                y: {
+                    formatter: function (val) {
+                        return "₹" + Number(val).toLocaleString("en-IN");
+                    }
+                }
+            },
+
+            legend: {
+                show: false
             }
-
-			
-
-
         };
 
-
-
         window.revenueChart = new ApexCharts(
-    document.querySelector("#chartBar"),
-    options
-);
-window.revenueChart.render();
+            document.querySelector("#chartBar"),
+            options
+        );
 
+        window.revenueChart.render();
 
-document
-.getElementById("downloadRevenueChart")
-.addEventListener("click", function(){
-
-    window.revenueChart.dataURI().then(function(uri){
-
-        let link = document.createElement("a");
-
-        link.href = uri.imgURI;
-
-        link.download = "revenue-growth.png";
-
-        link.click();
-
-    });
-
-});
-
-
+        document.getElementById("downloadRevenueChart").addEventListener("click", function () {
+            window.revenueChart.dataURI().then(function (uri) {
+                const link = document.createElement("a");
+                link.href = uri.imgURI;
+                link.download = "revenue-growth.png";
+                link.click();
+            });
+        });
     }
 
 });
+
 
 
 </script>
