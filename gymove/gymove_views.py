@@ -2,12 +2,13 @@ from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 from .forms import (
-    AdminRegisterForm,
+    MemberForm,
+    TrainerForm,
+    MembershipPlanForm,
+    LockPasswordForm,
 )
 
 from .models import (
@@ -45,15 +46,34 @@ def save_plans(data):
     Storage.write("membership_plans.json", data)
 
 
+def load_users():
+    return Storage.read("user.json")
+
+
+def save_users(data):
+    Storage.write("user.json", data)
+
+
 def today():
     return date.today()
+
+def login_required_json(view_func):
+
+    def wrapper(request, *args, **kwargs):
+
+        if "user" not in request.session:
+            return redirect("gymove:page-login")
+
+        return view_func(request, *args, **kwargs)
+
+    return wrapper
 
 
 # ==========================================================
 # DASHBOARD
 # ==========================================================
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def index(request):
 
     members = load_members()
@@ -117,7 +137,7 @@ def index(request):
     )
 
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def index_2(request):
 
     context = {
@@ -170,16 +190,20 @@ def personal_record(request):
 # PROFILE
 # ==========================================================
 
-@login_required(login_url="gymove:page-login")
+
+@login_required_json
 def app_profile(request):
 
+    username = request.session["user"]["username"]
+
     profile, created = UserProfile.objects.get_or_create(
-        user=request.user
+        username=username
     )
 
     context = {
         "page_title": "My Account",
         "profile": profile,
+        "user": request.session["user"],
     }
 
     return render(
@@ -188,6 +212,7 @@ def app_profile(request):
         context,
     )
 
+    
 
 # ==========================================================
 # BLOG / POSTS
@@ -726,31 +751,41 @@ def table_datatable_basic(request):
 # AUTHENTICATION
 # ==========================================================
 
+
 def page_register(request):
 
     if request.method == "POST":
-        form = AdminRegisterForm(request.POST)
 
-        if form.is_valid():
-            user = form.save()
-            user.is_staff = True
-            user.save()
+        users = load_users()
 
-            messages.success(request, "Admin account created successfully.")
-            return redirect("gymove:page-login")
+        username = request.POST.get("username", "").strip()
+        email = request.POST.get("email", "").strip()
+        password = request.POST.get("password", "")
 
-    else:
-        form = AdminRegisterForm()
+        if any(u.get("username") == username for u in users):
+            messages.error(request, "Username already exists.")
+            return redirect("gymove:page-register")
+
+        users.append({
+            "username": username,
+            "email": email,
+            "password": password,
+            "joined_on": datetime.now().strftime("%d %b %Y"),
+            "last_login": "Never",
+        })
+
+        save_users(users)
+
+        messages.success(request, "Account created successfully.")
+        return redirect("gymove:page-login")
 
     return render(
         request,
         "gymove/pages/page-register.html",
         {
-            "form": form,
             "page_title": "Admin Sign Up",
         },
     )
-
 
 def page_login(request):
 
@@ -759,17 +794,29 @@ def page_login(request):
         username = request.POST.get("username", "").strip()
         password = request.POST.get("password", "")
 
-        user = authenticate(
-            request,
-            username=username,
-            password=password,
+        users = load_users()
+
+        user = next(
+            (
+                u for u in users
+                if u.get("username") == username
+                and u.get("password") == password
+            ),
+            None,
         )
 
         if user:
-            login(request, user)
+            user["last_login"] = datetime.now().strftime("%d %b %Y %I:%M %p")
+            save_users(users)
+
+            request.session["user"] = user
+
             return redirect("gymove:index")
 
-        messages.error(request, "Invalid username or password.")
+        messages.error(
+            request,
+            "Invalid username or password."
+        )
 
     return render(
         request,
@@ -779,7 +826,6 @@ def page_login(request):
         },
     )
 
-
 def page_forgot_password(request):
     return render(
         request,
@@ -787,30 +833,9 @@ def page_forgot_password(request):
     )
 
 
-@login_required(login_url="gymove:page-login")
-def page_lock_screen(request):
-
-    profile, _ = UserProfile.objects.get_or_create(
-        user=request.user
-    )
-
-    if request.method == "POST":
-
-        password = request.POST.get("password", "")
-
-        if profile.lock_password == password:
-            return redirect("gymove:index")
-
-        messages.error(request, "Incorrect lock password.")
-
-    return render(
-        request,
-        "gymove/pages/page-lock-screen.html",
-        {
-            "page_title": "Lock Screen",
-        },
-    )
-
+def page_logout(request):
+    request.session.flush()
+    return redirect("gymove:page-login")
 
 # ==========================================================
 # ERROR PAGES
@@ -840,7 +865,7 @@ def page_error_503(request):
 # MEMBERS
 # ==========================================================
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def add_member(request):
 
     plans = load_plans()
@@ -984,7 +1009,7 @@ def add_member(request):
 
 
     
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def member_list(request):
 
     members = load_members()
@@ -1096,7 +1121,7 @@ def member_list(request):
     )
 
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def member_profile(request, id):
 
     members = load_members()
@@ -1213,7 +1238,7 @@ def member_profile(request, id):
         },
     )
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def edit_member(request, id):
 
     members = load_members()
@@ -1297,7 +1322,7 @@ def edit_member(request, id):
     )
 
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def delete_member(request, id):
 
     members = load_members()
@@ -1328,7 +1353,7 @@ def delete_member(request, id):
 # ==========================================================
 # TRAINERS
 # ==========================================================
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def add_trainer(request):
 
     if request.method == "POST":
@@ -1431,7 +1456,7 @@ def add_trainer(request):
         },
     )
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def trainer_list(request):
 
     trainers = sorted(
@@ -1449,7 +1474,7 @@ def trainer_list(request):
     )
 
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def trainer_profile(request, id):
 
     trainers = load_trainers()
@@ -1493,7 +1518,7 @@ def trainer_profile(request, id):
         },
     )
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def edit_trainer(request, id):
 
     trainers = load_trainers()
@@ -1610,7 +1635,7 @@ def edit_trainer(request, id):
     )
 
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def assign_member(request, id):
 
     trainers = load_trainers()
@@ -1693,7 +1718,7 @@ def assign_member(request, id):
         },
     )
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def remove_member_trainer(request, id):
 
     members = load_members()
@@ -1750,7 +1775,7 @@ def remove_member_trainer(request, id):
 
 # DELETE TRAINER
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def delete_trainer(request, id):
 
     trainers = load_trainers()
@@ -1797,7 +1822,7 @@ def delete_trainer(request, id):
 # MEMBERSHIP PLANS
 # ==========================================================
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def add_membership_plan(request):
 
     if request.method == "POST":
@@ -1873,7 +1898,7 @@ def add_membership_plan(request):
     )
 
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def membership_plan_list(request):
 
     plans = sorted(
@@ -1891,7 +1916,7 @@ def membership_plan_list(request):
     )
 
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def edit_membership_plan(request, id):
 
     plans = load_plans()
@@ -1967,7 +1992,7 @@ def edit_membership_plan(request, id):
     )
 
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def delete_membership_plan(request, id):
 
     plans = load_plans()
@@ -1988,13 +2013,15 @@ def delete_membership_plan(request, id):
 # PROFILE PHOTO
 # ==========================================================
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def upload_profile_photo(request):
 
     if request.method == "POST" and request.FILES.get("profile_image"):
 
+        username = request.session["user"]["username"]
+
         profile, created = UserProfile.objects.get_or_create(
-            user=request.user
+            username=username
         )
 
         profile.profile_image = request.FILES["profile_image"]
@@ -2008,14 +2035,15 @@ def upload_profile_photo(request):
     return redirect("gymove:app-profile")
 
 
-
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def remove_profile_photo(request):
 
     if request.method == "POST":
 
+        username = request.session["user"]["username"]
+
         profile, created = UserProfile.objects.get_or_create(
-            user=request.user
+            username=username
         )
 
         profile.profile_image = "profile_pics/default.png"
@@ -2030,23 +2058,21 @@ def remove_profile_photo(request):
     })
 
 
-
 # ==========================================================
 # LOCK PASSWORD
 # ==========================================================
 
-@login_required(login_url="gymove:page-login")
+@login_required_json
 def save_lock_password(request):
 
     if request.method == "POST":
 
-        password = request.POST.get(
-            "lock_password",
-            ""
-        )
+        password = request.POST.get("lock_password", "")
+
+        username = request.session["user"]["username"]
 
         profile, created = UserProfile.objects.get_or_create(
-            user=request.user
+            username=username
         )
 
         profile.lock_password = password
@@ -2057,8 +2083,4 @@ def save_lock_password(request):
             "Lock password saved."
         )
 
-    return redirect(
-        "gymove:app-profile"
-    )
-
-
+    return redirect("gymove:app-profile")

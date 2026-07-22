@@ -2,11 +2,10 @@ import os
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
 
 from .forms import MemberForm
 from gymove.models import UserProfile
+from .storage import Storage
 
 
 def add_member(request):
@@ -28,15 +27,15 @@ def login_view(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        user = authenticate(
-            request,
-            username=username,
-            password=password
-        )
+        users = Storage.read("user.json")
 
-        if user is not None:
-            login(request, user)
-            return redirect("gymove:index")
+        for user in users:
+            if (
+                user["username"] == username
+                and user["password"] == password
+            ):
+                request.session["user"] = user
+                return redirect("gymove:index")
 
     return render(
         request,
@@ -44,13 +43,17 @@ def login_view(request):
     )
 
 
-@login_required
 def remove_profile_photo(request):
 
     if request.method == "POST":
 
+        if "user" not in request.session:
+            return JsonResponse({"success": False})
+
+        username = request.session["user"]["username"]
+
         profile, created = UserProfile.objects.get_or_create(
-            user=request.user
+            username=username
         )
 
         if (

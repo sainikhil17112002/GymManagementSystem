@@ -146,8 +146,8 @@
     accept="image/*"
     hidden>
 
-                                  {% if request.user.userprofile.profile_image %}
-<img src="{{ request.user.userprofile.profile_image.url }}"
+                                  {% if profile.profile_image %}
+<img src="{{ profile.profile_image.url }}"
      class="profile-avatar"
      alt="Profile">
 {% else %}
@@ -205,17 +205,17 @@
 
   <div class="profile-name mt-2">
     <div class="fs-4 fw-bold text-white">
-        {{ request.user.first_name }} {{ request.user.last_name }}
+        {{ user.first_name }} {{ user.last_name }}
     </div>
 
     <div class="text-muted">
-        @{{ request.user.username }}
+        @{{ user.username }}
     </div>
 </div>
 
     <div class="profile-email ms-5">
         <div class="fs-5 fw-semibold text-white">
-            {{ request.user.email }}
+            {{ user.email }}
         </div>
 
         <div class="text-muted">
@@ -247,7 +247,7 @@
                                 <strong>Username</strong>
                             </div>
                             <div class="col-7">
-                                {{ request.user.username }}
+                                {{ user.username }}
                             </div>
                         </div>
 
@@ -256,7 +256,7 @@
                                 <strong>Email</strong>
                             </div>
                             <div class="col-7">
-                                {{ request.user.email }}
+                                {{ user.email }}
                             </div>
                         </div>
 
@@ -265,7 +265,7 @@
                                 <strong>Joined On</strong>
                             </div>
                             <div class="col-7">
-                                {{ request.user.date_joined|date:"d M Y" }}
+                                {{ user.joined_on|default:"-" }}
                             </div>
                         </div>
 
@@ -274,7 +274,7 @@
                                 <strong>Last Login</strong>
                             </div>
                             <div class="col-7">
-                                {{ request.user.last_login|date:"d M Y H:i" }}
+                               {{ user.last_login|default:"Never" }}
                             </div>
                         </div>
 

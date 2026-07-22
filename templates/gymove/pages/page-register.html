@@ -53,37 +53,64 @@
                                     Admin Sign Up
                                 </h4>
 
-                                <form method="POST">
+                            <form method="POST">
 
-                                    {% csrf_token %}
+    {% csrf_token %}
 
-                                    <div class="form-group">
-                                        <label class="mb-1 form-label">Username</label>
-                                        {{ form.username }}
-                                    </div>
+    <div class="form-group mb-3">
+        <label class="mb-1 form-label">Username</label>
+        <input
+            type="text"
+            name="username"
+            class="form-control"
+            placeholder="Enter username"
+            required
+        >
+    </div>
 
-                                    <div class="form-group">
-                                        <label class="mb-1 form-label">Email</label>
-                                        {{ form.email }}
-                                    </div>
+    <div class="form-group mb-3">
+        <label class="mb-1 form-label">Email</label>
+        <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Enter email"
+            required
+        >
+    </div>
 
-                                    <div class="form-group">
-                                        <label class="mb-1 form-label">Password</label>
-                                        {{ form.password1 }}
-                                    </div>
+    <div class="form-group mb-3">
+        <label class="mb-1 form-label">Password</label>
+        <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Enter password"
+            required
+        >
+    </div>
 
-                                    <div class="form-group">
-                                        <label class="mb-1 form-label">Confirm Password</label>
-                                        {{ form.password2 }}
-                                    </div>
+    <div class="form-group mb-3">
+        <label class="mb-1 form-label">Confirm Password</label>
+        <input
+            type="password"
+            name="confirm_password"
+            class="form-control"
+            placeholder="Confirm password"
+            required
+        >
+    </div>
 
-                                    <div class="text-center mt-4">
-                                        <button type="submit" class="btn btn-primary light btn-block">
-                                            Create Admin Account
-                                        </button>
-                                    </div>
+    <div class="text-center mt-4">
+        <button
+            type="submit"
+            class="btn btn-primary light btn-block"
+        >
+            Create Admin Account
+        </button>
+    </div>
 
-                                </form>
+</form>
 
                                 <div class="new-account mt-3 text-center">
                                     <p>
