@@ -1,0 +1,11 @@
+{
+    "current_month": {
+        "month": "July",
+        "year": "2026",
+        "status": "OPEN",
+        "total_revenue": 0,
+        "total_expense": 0,
+        "net_profit": 0
+    },
+    "closed_months": []
+}

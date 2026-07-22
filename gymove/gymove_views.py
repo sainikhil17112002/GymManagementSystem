@@ -68,7 +68,6 @@ def login_required_json(view_func):
 
     return wrapper
 
-
 # ==========================================================
 # DASHBOARD
 # ==========================================================
@@ -79,56 +78,124 @@ def index(request):
     members = load_members()
     trainers = load_trainers()
     plans = load_plans()
+    payments = load_payments()
+
 
     total_members = len(members)
+
 
     active_members = len([
         m for m in members
         if m.get("status", "").lower() == "active"
     ])
 
+
     total_trainers = len(trainers)
 
     total_plans = len(plans)
+
+
+
+    # ==============================
+    # MONTH REVENUE
+    # ==============================
+
+    month_revenue = 0
+
+    current_month = datetime.now().strftime("%Y-%m")
+
+
+    for payment in payments:
+
+        if payment.get("status", "").lower() != "paid":
+            continue
+
+
+        payment_date = payment.get("date", "")
+
+
+        if payment_date.startswith(current_month):
+
+            try:
+                month_revenue += int(
+                    payment.get("amount", 0)
+                )
+
+            except:
+                pass
+
+
+
+    # ==============================
+    # TRAINERS
+    # ==============================
 
     recommended_trainers = [
         t for t in trainers
         if t.get("status", "").lower() == "active"
     ][:4]
 
+
+
+    # ==============================
+    # EXPIRING MEMBERS
+    # ==============================
+
     today_date = today()
+
     next_7_days = today_date + timedelta(days=7)
 
+
     expiring_members = []
+
 
     for member in members:
 
         expiry = member.get("membership_expiry_date")
 
+
         if not expiry:
             continue
 
+
         try:
+
             expiry_date = datetime.strptime(
                 expiry,
                 "%Y-%m-%d"
             ).date()
 
+
             if today_date <= expiry_date <= next_7_days:
                 expiring_members.append(member)
 
-        except Exception:
+
+        except:
             continue
 
+
+
     context = {
+
         "page_title": "Dashboard",
+
         "total_members": total_members,
+
         "active_members": active_members,
+
         "total_trainers": total_trainers,
+
         "total_plans": total_plans,
+
+        "month_revenue": month_revenue,
+
         "recommended_trainers": recommended_trainers,
+
         "expiring_members": expiring_members,
+
     }
+
+
 
     return render(
         request,
@@ -149,6 +216,22 @@ def index_2(request):
         "gymove/index-2.html",
         context,
     )
+
+
+
+@login_required_json
+def index_2(request):
+
+    context = {
+        "page_title": "Dashboard",
+    }
+
+    return render(
+        request,
+        "gymove/index-2.html",
+        context,
+    )
+
 
 
 
@@ -879,8 +962,6 @@ def add_member(request):
 
         expiry_date = ""
 
-
-        # Calculate membership expiry automatically
         selected_plan = next(
             (
                 p for p in plans
@@ -894,30 +975,24 @@ def add_member(request):
 
             try:
 
-                duration = int(
-                    selected_plan.get("duration", 0)
-                )
+                duration = int(selected_plan.get("duration", 0))
 
                 expiry = datetime.strptime(
                     join_date,
                     "%Y-%m-%d"
                 )
 
-
                 expiry = expiry + relativedelta(
-    months=duration
-)
-
+                    months=duration
+                )
 
                 expiry_date = expiry.strftime(
                     "%Y-%m-%d"
                 )
 
-
             except Exception:
 
                 expiry_date = ""
-
 
 
         member = {
@@ -933,57 +1008,73 @@ def add_member(request):
                 + " "
                 + request.POST.get("last_name"),
 
-
             "gender": request.POST.get("gender"),
 
             "date_of_birth":
                 request.POST.get("date_of_birth"),
 
-
             "phone":
                 request.POST.get("phone"),
-
 
             "email":
                 request.POST.get("email"),
 
-
             "address":
                 request.POST.get("address"),
-
 
             "emergency_contact":
                 request.POST.get("emergency_contact"),
 
-
             "join_date":
                 join_date,
-
 
             "membership_plan":
                 plan_id,
 
-
             "membership_expiry_date":
                 expiry_date,
-
 
             "status":
                 "Active",
 
-
-           "trainer_id":
-    request.POST.get(
-        "trainer_id"
-    ),
+            "trainer_id":
+                request.POST.get("trainer_id"),
 
         }
-
 
 
         members.append(member)
 
         save_members(members)
+
+
+        payments = load_payments()
+
+
+        if selected_plan:
+
+            payment = {
+
+                "member_id": member.get("member_id"),
+
+                "member": member.get("full_name"),
+
+                "plan": selected_plan.get("name"),
+
+                "amount": int(
+                    selected_plan.get("price", 0)
+                ),
+
+                "date": join_date,
+
+                "status": "Paid",
+
+            }
+
+
+            payments.append(payment)
+
+            save_payments(payments)
 
 
         messages.success(
@@ -1008,7 +1099,6 @@ def add_member(request):
     )
 
 
-    
 @login_required_json
 def member_list(request):
 
@@ -2084,3 +2174,213 @@ def save_lock_password(request):
         )
 
     return redirect("gymove:app-profile")
+
+
+def load_revenue_history():
+    return Storage.read("revenue_history.json")
+
+
+def save_revenue_history(data):
+    Storage.write("revenue_history.json", data)
+
+
+def load_payments():
+    return Storage.read("payments.json")
+
+
+def save_payments(data):
+    Storage.write("payments.json", data)
+
+
+def load_expenses():
+    return Storage.read("expenses.json")
+
+
+def save_expenses(data):
+    Storage.write("expenses.json", data)
+
+
+# ==========================================================
+# REVENUE HISTORY
+# ==========================================================
+
+@login_required_json
+def revenue_history(request):
+
+    payments = load_payments()
+    expenses = load_expenses()
+
+    now = datetime.now()
+
+    current_month_key = now.strftime("%Y-%m")
+
+
+    total_revenue = 0
+    transactions = []
+
+
+    for payment in payments:
+
+        if payment.get("status", "").lower() != "paid":
+            continue
+
+
+        payment_date = payment.get("date", "")
+
+
+        if payment_date.startswith(current_month_key):
+
+            try:
+
+                amount = int(
+                    payment.get("amount", 0)
+                )
+
+                total_revenue += amount
+
+                transactions.append(payment)
+
+
+            except:
+                pass
+
+
+
+    total_expense = 0
+    expense_list = []
+
+
+    for expense in expenses:
+
+        expense_date = expense.get("date", "")
+
+
+        if expense_date.startswith(current_month_key):
+
+            try:
+
+                amount = int(
+                    expense.get("amount", 0)
+                )
+
+                total_expense += amount
+
+                expense_list.append(expense)
+
+
+            except:
+                pass
+
+
+
+    current_month = {
+
+        "month": now.strftime("%B"),
+
+        "year": now.year,
+
+        "status": "OPEN",
+
+        "total_revenue": total_revenue,
+
+        "total_expense": total_expense,
+
+        "net_profit": total_revenue - total_expense,
+
+    }
+
+
+
+    context = {
+
+        "page_title": "Revenue History",
+
+        "current_month": current_month,
+
+        "closed_months": [],
+
+        "transactions": transactions,
+
+        "expenses": expense_list,
+
+    }
+
+
+
+    return render(
+    request,
+    "gymove/pages/revenue-history.html",
+    context
+)
+
+
+@login_required_json
+def add_expense(request):
+
+    if request.method == "POST":
+
+        expenses = load_expenses()
+
+
+        expense = {
+
+            "title": request.POST.get("title"),
+
+            "amount": int(
+                request.POST.get("amount", 0)
+            ),
+
+            "category": request.POST.get("category"),
+
+            "date": request.POST.get("date"),
+
+        }
+
+
+        expenses.append(expense)
+
+        save_expenses(expenses)
+
+
+        messages.success(
+            request,
+            "Expense added successfully."
+        )
+
+
+        return redirect("gymove:revenue_history")
+
+
+    return render(
+        request,
+        "gymove/pages/add-expense.html",
+        {
+            "page_title": "Add Expense"
+        }
+    )
+
+
+@login_required_json
+def delete_expense(request, index):
+
+    expenses = load_expenses()
+
+    try:
+
+        expenses.pop(index)
+
+        save_expenses(expenses)
+
+        messages.success(
+            request,
+            "Expense deleted successfully."
+        )
+
+    except:
+        pass
+
+
+    return redirect("gymove:revenue_history")
+
+
+

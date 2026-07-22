@@ -202,5 +202,22 @@ path(
     name="save-lock-password",
 ),
 
+path(
+    "revenue-history/",
+    gymove_views.revenue_history,
+    name="revenue_history",
+),
+
+path(
+    "add-expense/",
+    gymove_views.add_expense,
+    name="add-expense"
+),
+
+path(
+    "delete-expense/<int:index>/",
+    gymove_views.delete_expense,
+    name="delete-expense"
+),
 
 ]

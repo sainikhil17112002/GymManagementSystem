@@ -148,16 +148,37 @@
                 </ul>
             </li>
 
-            <!-- Revenue -->
-            <li>
-                <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
-                    <i class="flaticon-381-controls-3"></i>
-                    <span class="nav-text">Revenue</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="{% url 'gymove:chart-morris' %}">Revenue Reports</a></li>
-                </ul>
-            </li>
+         <!-- Revenue -->
+<li>
+    <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+        <i class="flaticon-381-controls-3"></i>
+        <span class="nav-text">Revenue</span>
+    </a>
+
+    <ul aria-expanded="false">
+
+        <li>
+            <a href="{% url 'gymove:revenue_history' %}">
+                Revenue History
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'gymove:add-expense' %}">
+                Add Expense
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'gymove:chart-morris' %}">
+                Revenue Reports
+            </a>
+        </li>
+
+    </ul>
+</li>
 
             <!-- Widgets -->
             <li>
