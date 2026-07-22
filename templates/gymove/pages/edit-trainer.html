@@ -1,0 +1,285 @@
+{% extends 'gymove/elements/layouts/admin.html' %}
+
+{% block content %}
+
+<div class="content-body default-height">
+
+<div class="container-fluid">
+
+
+<div class="row justify-content-center">
+
+<div class="col-xl-8">
+
+
+<div class="card">
+
+
+<div class="card-header">
+
+<h4 class="card-title">
+Edit Trainer
+</h4>
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+<div class="row">
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Trainer ID
+</label>
+
+<input 
+type="text"
+class="form-control"
+value="{{ trainer.trainer_id }}"
+readonly>
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Full Name
+</label>
+
+<input 
+type="text"
+name="full_name"
+class="form-control"
+value="{{ trainer.full_name }}">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Gender
+</label>
+
+<select 
+name="gender"
+class="form-control">
+
+
+<option value="Male"
+{% if trainer.gender == "Male" %}selected{% endif %}>
+Male
+</option>
+
+
+<option value="Female"
+{% if trainer.gender == "Female" %}selected{% endif %}>
+Female
+</option>
+
+
+<option value="Other"
+{% if trainer.gender == "Other" %}selected{% endif %}>
+Other
+</option>
+
+
+</select>
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Phone
+</label>
+
+<input
+type="text"
+name="phone"
+class="form-control"
+value="{{ trainer.phone }}">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Email
+</label>
+
+<input
+type="email"
+name="email"
+class="form-control"
+value="{{ trainer.email }}">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Specialization
+</label>
+
+<input
+type="text"
+name="specialization"
+class="form-control"
+value="{{ trainer.specialization }}">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Experience
+</label>
+
+<input
+type="number"
+name="experience"
+class="form-control"
+value="{{ trainer.experience }}">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Salary
+</label>
+
+<input
+type="number"
+name="salary"
+class="form-control"
+value="{{ trainer.salary }}">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Joining Date
+</label>
+
+<input
+type="date"
+name="joining_date"
+class="form-control"
+value="{{ trainer.joining_date }}">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Status
+</label>
+
+<select
+name="status"
+class="form-control">
+
+
+<option value="Active"
+{% if trainer.status == "Active" %}selected{% endif %}>
+Active
+</option>
+
+
+<option value="Inactive"
+{% if trainer.status == "Inactive" %}selected{% endif %}>
+Inactive
+</option>
+
+
+</select>
+
+</div>
+
+
+
+</div>
+
+
+
+<button 
+type="submit"
+class="btn btn-primary">
+
+Update Trainer
+
+</button>
+
+
+
+<a href="{% url 'gymove:trainer-list' %}"
+class="btn btn-light">
+
+Cancel
+
+</a>
+
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+{% endblock %}

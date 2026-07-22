@@ -1,0 +1,615 @@
+{% extends 'gymove/elements/layouts/admin.html' %}
+{% load static %}
+
+{% block additional_css %}
+
+
+<style>
+.profile-head{
+    padding:25px 35px;
+}
+
+.profile-info{
+    display:flex;
+    align-items:center;
+    gap:35px;
+}
+
+.profile-photo{
+    position:relative;
+    width:110px;
+    height:110px;
+    flex:0 0 110px;
+}
+
+.profile-photo > form > img,
+.profile-avatar{
+    width:110px;
+    height:110px;
+    border-radius:50%;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+    border:4px solid rgba(255,255,255,.08);
+    box-shadow:0 12px 25px rgba(0,0,0,.35);
+    transition:.3s ease;
+}
+
+.profile-photo > form > img:hover,
+.profile-avatar:hover{
+    transform:scale(1.03);
+}
+
+.profile-photo-add{
+    position:absolute;
+    right:-5px;
+    bottom:-5px;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    z-index:10;
+}
+
+.profile-details{
+    display:flex;
+    align-items:flex-start;
+    flex:1;
+    padding-top:18px;
+}
+
+.profile-name{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    padding-right:45px;
+    margin-right:45px;
+    border-right:1px solid rgba(255,255,255,.12);
+    min-width:180px;
+}
+
+.profile-email{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+}
+
+.profile-name h4,
+.profile-email h4{
+    margin:0 0 6px;
+    color:#fff;
+    font-weight:700;
+    line-height:1.2;
+}
+
+.profile-name p,
+.profile-email p{
+    margin:0;
+    color:#8b92a8;
+    font-size:14px;
+}
+
+#cropModal .modal-dialog{
+    max-width:900px;
+}
+
+#cropModal .modal-body{
+    padding:15px;
+}
+
+.crop-container{
+    width:100%;
+    height:70vh;
+}
+
+#cropImage{
+    display:block;
+    max-width:100%;
+}
+
+.cropper-view-box,
+.cropper-face{
+    border-radius:50%;
+}
+</style>
+
+
+{% endblock %}
+
+{% block content %}
+
+<div class="content-body default-height">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="profile card card-body px-3 pt-3 pb-0">
+                    <div class="profile-head">
+
+                        <div class="profile-info">
+
+                            <div class="profile-photo">
+
+                                <form id="profileUploadForm"
+                                      action="{% url 'gymove:upload-profile-photo' %}"
+                                      method="POST"
+                                      enctype="multipart/form-data">
+
+                                    {% csrf_token %}
+
+                                   <input
+    type="file"
+    id="profileImageInput"
+    accept="image/*"
+    hidden>
+
+                                  {% if request.user.userprofile.profile_image %}
+<img src="{{ request.user.userprofile.profile_image.url }}"
+     class="profile-avatar"
+     alt="Profile">
+{% else %}
+<img src="{% static 'gymove/images/profile/profile.png' %}"
+     class="profile-avatar"
+     alt="Profile">
+{% endif %}
+
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary btn-sm profile-photo-add"
+                                                type="button"
+                                                data-bs-toggle="dropdown">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+
+                                        <ul class="dropdown-menu">
+
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="#"
+                                                   onclick="document.getElementById('profileImageInput').click(); return false;">
+                                                    <i class="fa fa-folder-open me-2"></i>
+                                                    Browse Files
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                               <a class="dropdown-item"
+   href="#"
+   id="cameraBtn">
+    <i class="fa fa-camera me-2"></i>
+    Camera
+</a>
+                                            </li>
+
+                                            <li><hr class="dropdown-divider"></li>
+
+                                            <li>
+                                                <a class="dropdown-item text-danger"
+   href="#"
+   id="removePhotoBtn">
+    <i class="fa fa-trash me-2"></i>
+    Remove Photo
+</a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                 <div class="profile-details">
+
+  <div class="profile-name mt-2">
+    <div class="fs-4 fw-bold text-white">
+        {{ request.user.first_name }} {{ request.user.last_name }}
+    </div>
+
+    <div class="text-muted">
+        @{{ request.user.username }}
+    </div>
+</div>
+
+    <div class="profile-email ms-5">
+        <div class="fs-5 fw-semibold text-white">
+            {{ request.user.email }}
+        </div>
+
+        <div class="text-muted">
+            Email Address
+        </div>
+    </div>
+
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+		        <div class="row justify-content-center">
+
+            <div class="col-xl-6 col-lg-8">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="text-primary mb-4">
+                            Administrator Account
+                        </h4>
+
+                        <div class="row mb-3">
+                            <div class="col-5">
+                                <strong>Username</strong>
+                            </div>
+                            <div class="col-7">
+                                {{ request.user.username }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-5">
+                                <strong>Email</strong>
+                            </div>
+                            <div class="col-7">
+                                {{ request.user.email }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-5">
+                                <strong>Joined On</strong>
+                            </div>
+                            <div class="col-7">
+                                {{ request.user.date_joined|date:"d M Y" }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-5">
+                                <strong>Last Login</strong>
+                            </div>
+                            <div class="col-7">
+                                {{ request.user.last_login|date:"d M Y H:i" }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5">
+                                <strong>Status</strong>
+                            </div>
+                            <div class="col-7">
+                                <span class="badge light badge-success">
+                                    Active
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- Crop Modal -->
+<div class="modal fade" id="cropModal" tabindex="-1">
+   <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Crop Profile Picture</h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"></button>
+            </div>
+
+<div class="modal-body">
+    <div class="crop-container">
+        <img id="cropImage">
+    </div>
+</div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    id="cropSaveBtn">
+                    Save
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cameraModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Take Photo</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+
+                <video id="cameraVideo"
+                       autoplay
+                       playsinline
+                       style="width:100%;border-radius:10px;"></video>
+
+                <canvas id="cameraCanvas" hidden></canvas>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <button class="btn btn-primary"
+                        id="captureBtn">
+                    Capture
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+{% block additional_js %}
+
+<script>
+let cropper;
+
+const input = document.getElementById("profileImageInput");
+const cropImage = document.getElementById("cropImage");
+const cropModalElement = document.getElementById("cropModal");
+const cropModal = new bootstrap.Modal(cropModalElement);
+const cameraModalElement = document.getElementById("cameraModal");
+const cameraModal = new bootstrap.Modal(cameraModalElement);
+
+const cameraVideo = document.getElementById("cameraVideo");
+const cameraCanvas = document.getElementById("cameraCanvas");
+
+let cameraStream = null;
+
+input.addEventListener("change", function (e) {
+
+    const file = e.target.files[0];
+    if (!file) return;
+
+    cropImage.src = URL.createObjectURL(file);
+
+    cropModal.show();
+
+    cropModalElement.addEventListener("shown.bs.modal", function () {
+
+        if (cropper) {
+            cropper.destroy();
+        }
+
+        cropper = new Cropper(cropImage, {
+            aspectRatio: 1,
+            viewMode: 2,
+            autoCropArea: 0.9,
+            dragMode: "move",
+            responsive: true,
+            background: false,
+        });
+
+    }, { once: true });
+
+});
+
+document.getElementById("cropSaveBtn").addEventListener("click", function () {
+
+    if (!cropper) return;
+
+    const canvas = cropper.getCroppedCanvas({
+        width: 800,
+        height: 800,
+        imageSmoothingEnabled: true,
+        imageSmoothingQuality: "high"
+    });
+
+    canvas.toBlob(function (blob) {
+
+        const formData = new FormData();
+
+        formData.append("profile_image", blob, "profile.png");
+
+        formData.append(
+            "csrfmiddlewaretoken",
+            document.querySelector("[name=csrfmiddlewaretoken]").value
+        );
+
+        fetch("{% url 'gymove:upload-profile-photo' %}", {
+            method: "POST",
+            body: formData
+        })
+        .then(() => {
+            URL.revokeObjectURL(cropImage.src);
+            location.reload();
+        });
+
+    });
+
+});
+
+document.getElementById("cropModal").addEventListener("hidden.bs.modal", function () {
+
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+
+    input.value = "";
+
+});
+
+document.getElementById("removePhotoBtn").addEventListener("click", function (e) {
+
+    e.preventDefault();
+
+    if (!confirm("Remove your profile photo?")) {
+        return;
+    }
+
+    fetch("{% url 'gymove:remove-profile-photo' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+
+     if (data.success) {
+    window.location.reload();
+}
+
+    });
+
+});
+
+document.getElementById("removePhotoBtn").addEventListener("click", function (e) {
+
+    e.preventDefault();
+
+    if (!confirm("Remove your profile photo?")) {
+        return;
+    }
+
+    fetch("{% url 'gymove:remove-profile-photo' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+
+     if (data.success) {
+    window.location.reload();
+}
+
+    });
+
+});
+
+const cameraBtn = document.getElementById("cameraBtn");
+
+cameraBtn.addEventListener("click", async function (e) {
+
+    e.preventDefault();
+
+    try {
+
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: true
+        });
+
+        cameraVideo.srcObject = cameraStream;
+
+        cameraModal.show();
+
+    } catch (err) {
+
+        console.error(err);
+        alert("Unable to access camera.");
+
+    }
+
+});
+
+
+   
+document.getElementById("captureBtn").addEventListener("click", function () {
+
+    const ctx = cameraCanvas.getContext("2d");
+
+    cameraCanvas.width = cameraVideo.videoWidth;
+    cameraCanvas.height = cameraVideo.videoHeight;
+
+    ctx.drawImage(
+        cameraVideo,
+        0,
+        0,
+        cameraCanvas.width,
+        cameraCanvas.height
+    );
+
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+
+    const imageData = cameraCanvas.toDataURL("image/png");
+
+    cameraModal.hide();
+
+    cropImage.src = imageData;
+
+    cropModal.show();
+
+    cropModalElement.addEventListener("shown.bs.modal", function () {
+
+        if (cropper) {
+            cropper.destroy();
+        }
+
+        cropper = new Cropper(cropImage, {
+            aspectRatio: 1,
+            viewMode: 2,
+            autoCropArea: 0.9,
+            dragMode: "move",
+            responsive: true,
+            background: false,
+        });
+
+    }, { once: true });
+
+});
+
+cameraModalElement.addEventListener("hidden.bs.modal", function () {
+
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+
+});
+
+
+</script>
+
+
+{% endblock %}
+
+

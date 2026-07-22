@@ -1,0 +1,188 @@
+{% load static %}
+<div class="deznav">
+    <div class="deznav-scroll">
+        <ul class="metismenu" id="menu">
+
+            <!-- Dashboard -->
+            <li>
+                <a href="{% url 'gymove:index' %}">
+                    <i class="flaticon-381-networking"></i>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+            </li>
+
+          <!-- Members -->
+<li>
+
+    <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+
+        <i class="flaticon-381-compact-disc-1"></i>
+
+        <span class="nav-text">
+            Members
+        </span>
+
+    </a>
+
+
+    <ul aria-expanded="false">
+
+
+        <li>
+            <a href="{% url 'gymove:add-member' %}">
+                Add Member
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'gymove:member-list' %}">
+                Member List
+            </a>
+        </li>
+
+
+    </ul>
+
+
+</li>
+
+
+       <!-- Membership Plans -->
+<li>
+
+    <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+
+        <i class="flaticon-381-briefcase"></i>
+
+        <span class="nav-text">
+            Membership Plans
+        </span>
+
+    </a>
+
+
+    <ul aria-expanded="false">
+
+
+        <li>
+            <a href="{% url 'gymove:add-membership-plan' %}">
+                Add Plan
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'gymove:membership-plan-list' %}">
+                Plan List
+            </a>
+        </li>
+
+
+    </ul>
+
+
+</li>
+
+
+<!-- Trainers -->
+<li>
+    <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+        <i class="flaticon-381-internet"></i>
+        <span class="nav-text">Trainers</span>
+    </a>
+
+    <ul aria-expanded="false">
+
+        <li>
+            <a href="{% url 'gymove:add-trainer' %}">
+                Add Trainer
+            </a>
+        </li>
+
+        <li>
+           <a href="{% url 'gymove:trainer-list' %}">
+    Trainer List
+</a>
+        </li>
+
+    </ul>
+</li>
+
+            <!-- Attendance -->
+            <li>
+                <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <i class="flaticon-381-network"></i>
+                    <span class="nav-text">Attendance</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'gymove:table-datatable-basic' %}">Attendance List</a></li>
+                </ul>
+            </li>
+
+            <!-- Products -->
+            <li>
+                <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <i class="flaticon-381-box"></i>
+                    <span class="nav-text">Products</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'gymove:ecom-product-grid' %}">Product Grid</a></li>
+                    <li><a href="{% url 'gymove:ecom-product-list' %}">Product List</a></li>
+                    <li><a href="{% url 'gymove:ecom-product-detail' %}">Product Details</a></li>
+                    <li><a href="{% url 'gymove:ecom-product-order' %}">Orders</a></li>
+                    <li><a href="{% url 'gymove:ecom-checkout' %}">Checkout</a></li>
+                    <li><a href="{% url 'gymove:ecom-invoice' %}">Invoices</a></li>
+                    <li><a href="{% url 'gymove:ecom-customers' %}">Customers</a></li>
+                </ul>
+            </li>
+
+            <!-- Inventory -->
+            <li>
+                <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <i class="flaticon-381-heart"></i>
+                    <span class="nav-text">Inventory</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'gymove:uc-lightgallery' %}">Inventory Gallery</a></li>
+                </ul>
+            </li>
+
+            <!-- Revenue -->
+            <li>
+                <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <i class="flaticon-381-controls-3"></i>
+                    <span class="nav-text">Revenue</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'gymove:chart-morris' %}">Revenue Reports</a></li>
+                </ul>
+            </li>
+
+            <!-- Widgets -->
+            <li>
+                <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <i class="flaticon-381-networking"></i>
+                    <span class="nav-text">Widgets</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'gymove:app-calender' %}">Calendar</a></li>
+                    <li><a href="{% url 'gymove:content' %}">Content</a></li>
+                    <li><a href="{% url 'gymove:add_content' %}">Add Content</a></li>
+                </ul>
+            </li>
+            
+
+        </ul>
+
+        <div class="add-menu-sidebar">
+            <img src="{% static 'gymove/images/calendar.png' %}" alt="" class="me-3">
+            <a href="{% url 'gymove:add_content' %}" class="font-w500 mb-0">Create Announcement</a>
+        </div>
+
+        <div class="copyright">
+            <p><strong>GPISC Admin Dashboard</strong> © 2026 All Rights Reserved</p>
+        </div>
+
+    </div>
+</div>

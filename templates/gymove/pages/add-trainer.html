@@ -1,0 +1,278 @@
+{% extends 'gymove/elements/layouts/admin.html' %}
+
+{% block content %}
+
+<div class="content-body default-height">
+
+<div class="container-fluid">
+
+
+<div class="row justify-content-center">
+
+<div class="col-xl-8">
+
+
+<div class="card">
+
+
+<div class="card-header">
+
+<h4 class="card-title">
+Add New Trainer
+</h4>
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+<div class="row">
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Trainer ID
+</label>
+
+<input 
+type="text"
+name="trainer_id"
+class="form-control"
+required>
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Full Name
+</label>
+
+<input 
+type="text"
+name="full_name"
+class="form-control"
+required>
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Gender
+</label>
+
+
+<select
+name="gender"
+class="form-control">
+
+
+<option value="Male">
+Male
+</option>
+
+
+<option value="Female">
+Female
+</option>
+
+
+<option value="Other">
+Other
+</option>
+
+
+</select>
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Phone
+</label>
+
+<input 
+type="text"
+name="phone"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Email
+</label>
+
+<input 
+type="email"
+name="email"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Specialization
+</label>
+
+<input 
+type="text"
+name="specialization"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Experience (Years)
+</label>
+
+<input 
+type="number"
+name="experience"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Salary
+</label>
+
+<input 
+type="number"
+name="salary"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Joining Date
+</label>
+
+<input 
+type="date"
+name="joining_date"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Status
+</label>
+
+
+<select
+name="status"
+class="form-control">
+
+
+<option value="Active">
+Active
+</option>
+
+
+<option value="Inactive">
+Inactive
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+<button 
+type="submit"
+class="btn btn-primary">
+
+Add Trainer
+
+</button>
+
+
+
+<a href="{% url 'gymove:trainer-list' %}"
+class="btn btn-light">
+
+Cancel
+
+</a>
+
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+{% endblock %}

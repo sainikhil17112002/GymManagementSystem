@@ -1,0 +1,30 @@
+.footer {
+    padding-left: 0;
+    background-color: transparent;
+
+    @include respond('laptop') {
+        padding-left: 0;
+    }
+
+    .copyright {
+        padding: 0.9375rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+
+        p {
+            margin: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        a {
+            color: $primary;
+        }
+
+        @include custommq($min: 991px) {
+            border-radius: 0 0 50px;
+        }
+    }
+}

@@ -1,0 +1,192 @@
+{% extends 'gymove/elements/layouts/admin.html' %}
+
+{% block content %}
+
+<div class="content-body">
+
+<div class="container-fluid">
+
+
+<div class="card">
+
+
+<div class="card-header">
+
+<h4 class="card-title">
+Member Profile
+</h4>
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<div class="row">
+
+
+
+<div class="col-md-6">
+
+
+<p>
+<strong>Member ID:</strong>
+{{ member.member_id }}
+</p>
+
+
+<p>
+<strong>Name:</strong>
+{{ member.full_name }}
+</p>
+
+
+<p>
+<strong>Gender:</strong>
+{{ member.gender|default:"-" }}
+</p>
+
+
+<p>
+<strong>Date of Birth:</strong>
+{{ member.date_of_birth|default:"-" }}
+</p>
+
+
+<p>
+<strong>Phone:</strong>
+{{ member.phone|default:"-" }}
+</p>
+
+
+<p>
+<strong>Email:</strong>
+{{ member.email|default:"-" }}
+</p>
+
+
+<p>
+<strong>Address:</strong>
+{{ member.address|default:"-" }}
+</p>
+
+
+</div>
+
+
+
+
+<div class="col-md-6">
+
+
+<p>
+<strong>Trainer:</strong>
+
+{{ member.trainer_name|default:"Not Assigned" }}
+
+</p>
+
+
+
+<p>
+<strong>Membership Plan:</strong>
+
+{{ member.membership_plan_name|default:"No Plan" }}
+
+</p>
+
+
+
+<p>
+<strong>Joining Date:</strong>
+
+{{ member.join_date|default:"-" }}
+
+</p>
+
+
+
+<p>
+<strong>Expiry Date:</strong>
+
+{{ member.membership_expiry_date|default:"-" }}
+
+</p>
+
+
+
+<p>
+<strong>Status:</strong>
+
+
+{% if member.status == "Active" %}
+
+<span class="badge badge-success">
+Active
+</span>
+
+
+{% elif member.status == "Expired" %}
+
+<span class="badge badge-danger">
+Expired
+</span>
+
+
+{% else %}
+
+<span class="badge badge-warning">
+{{ member.status }}
+</span>
+
+
+{% endif %}
+
+
+</p>
+
+
+</div>
+
+
+
+</div>
+
+
+
+<hr>
+
+
+
+<a href="{% url 'gymove:edit-member' member.member_id %}"
+class="btn btn-primary">
+
+Edit Member
+
+</a>
+
+
+
+<a href="{% url 'gymove:member-list' %}"
+class="btn btn-light">
+
+Back
+
+</a>
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+{% endblock %}
