@@ -95,6 +95,48 @@ def index(request):
     total_plans = len(plans)
 
 
+        # ==============================
+    # REVENUE GROWTH CHART
+    # ==============================
+
+    revenue_chart = {
+        "months": [],
+        "revenue": [],
+    }
+
+
+    monthly_revenue = {}
+
+
+    for payment in payments:
+
+        if payment.get("status", "").lower() != "paid":
+            continue
+
+
+        date = payment.get("date", "")
+
+
+        if date:
+
+            month = date[:7]
+
+
+            if month not in monthly_revenue:
+                monthly_revenue[month] = 0
+
+
+            monthly_revenue[month] += int(
+                payment.get("amount", 0)
+            )
+
+
+    for month, amount in sorted(monthly_revenue.items()):
+
+        revenue_chart["months"].append(month)
+
+        revenue_chart["revenue"].append(amount)
+
 
     # ==============================
     # MONTH REVENUE
@@ -188,6 +230,8 @@ def index(request):
         "total_plans": total_plans,
 
         "month_revenue": month_revenue,
+
+        "revenue_chart": revenue_chart,
 
         "recommended_trainers": recommended_trainers,
 
@@ -1439,6 +1483,46 @@ def delete_member(request, id):
         "gymove:member-list"
     )
 
+    # ==============================
+    # REVENUE GROWTH CHART  ✅ PASTE HERE
+    # ==============================
+
+    revenue_chart = {
+        "months": [],
+        "revenue": [],
+    }
+
+    monthly_revenue = {}
+
+
+    for payment in payments:
+
+        if payment.get("status", "").lower() != "paid":
+            continue
+
+
+        date = payment.get("date", "")
+
+
+        if date:
+
+            month = date[:7]
+
+
+            if month not in monthly_revenue:
+                monthly_revenue[month] = 0
+
+
+            monthly_revenue[month] += int(
+                payment.get("amount", 0)
+            )
+
+
+    for month, amount in sorted(monthly_revenue.items()):
+
+        revenue_chart["months"].append(month)
+        revenue_chart["revenue"].append(amount)
+
 
 # ==========================================================
 # TRAINERS
@@ -2302,6 +2386,7 @@ def revenue_history(request):
         "transactions": transactions,
 
         "expenses": expense_list,
+
 
     }
 
