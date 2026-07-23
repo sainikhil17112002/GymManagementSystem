@@ -1,0 +1,100 @@
+{% load static %}
+
+<div class="nav-header">
+
+    <a href="{% url 'gymove:index' %}" class="brand-logo" aria-label="GPISC">
+
+        <!-- Small Logo -->
+        <img
+            id="gpisc-small-logo"
+            class="logo-abbr"
+            src="{% static 'gymove/images/logo/logo-small-dark.png' %}"
+            alt="GPISC Small Logo">
+
+        <!-- Full Logo -->
+        <img
+            id="gpisc-full-logo"
+            class="brand-title"
+            src="{% static 'gymove/images/logo/logo-full-dark.png' %}"
+            alt="GPISC Full Logo">
+
+    </a>
+
+    <div class="nav-control">
+        <div class="hamburger">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const body = document.body;
+    const wrapper = document.getElementById("main-wrapper");
+
+    const smallLogo = document.getElementById("gpisc-small-logo");
+    const fullLogo  = document.getElementById("gpisc-full-logo");
+
+    function updateLogo() {
+
+        const theme =
+            wrapper.getAttribute("data-theme-version") ||
+            body.getAttribute("data-theme-version") ||
+            "light";
+
+        const sidebar =
+            wrapper.getAttribute("data-sidebar-style") ||
+            "full";
+
+        if (theme === "dark") {
+            smallLogo.src = "{% static 'gymove/images/logo/logo-small-light.png' %}";
+            fullLogo.src  = "{% static 'gymove/images/logo/logo-full-light.png' %}";
+        } else {
+            smallLogo.src = "{% static 'gymove/images/logo/logo-small-dark.png' %}";
+            fullLogo.src  = "{% static 'gymove/images/logo/logo-full-dark.png' %}";
+        }
+
+        const collapsed =
+            wrapper.classList.contains("menu-toggle") ||
+            sidebar === "mini" ||
+            sidebar === "compact";
+
+        if (collapsed) {
+            smallLogo.style.display = "block";
+            fullLogo.style.display = "none";
+        } else {
+            smallLogo.style.display = "none";
+            fullLogo.style.display = "block";
+        }
+    }
+
+    updateLogo();
+
+    const observer = new MutationObserver(updateLogo);
+
+    observer.observe(wrapper, {
+        attributes: true,
+        attributeFilter: [
+            "class",
+            "data-sidebar-style",
+            "data-theme-version"
+        ]
+    });
+
+    observer.observe(body, {
+        attributes: true,
+        attributeFilter: [
+            "data-theme-version"
+        ]
+    });
+
+    document.querySelector(".nav-control").addEventListener("click", function () {
+        setTimeout(updateLogo, 100);
+    });
+
+});
+</script>

@@ -1,0 +1,376 @@
+{% extends 'gymove/elements/layouts/admin.html' %}
+
+{% block content %}
+
+<div class="content-body">
+
+<div class="container-fluid">
+
+
+<div class="row">
+
+
+<!-- Trainer Info -->
+
+<div class="col-xl-4 col-lg-5">
+
+<div class="card">
+
+<div class="card-body text-center">
+
+
+<div class="rounded-circle bg-light mx-auto mb-3"
+style="width:120px;height:120px;display:flex;align-items:center;justify-content:center;">
+
+<i class="fa fa-user fa-3x"></i>
+
+</div>
+
+
+<h4>
+{{ trainer.full_name }}
+</h4>
+
+
+<p class="text-muted">
+{{ trainer.specialization|default:"Trainer" }}
+</p>
+
+
+{% if trainer.status == "Active" %}
+
+<span class="badge badge-success">
+Active
+</span>
+
+{% else %}
+
+<span class="badge badge-danger">
+{{ trainer.status }}
+</span>
+
+{% endif %}
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+
+<!-- Trainer Details -->
+
+<div class="col-xl-8 col-lg-7">
+
+
+<div class="card">
+
+
+<div class="card-header">
+
+<h4 class="card-title">
+Trainer Information
+</h4>
+
+</div>
+
+
+<div class="card-body">
+
+
+<div class="row">
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Trainer ID
+</label>
+
+<h5>
+{{ trainer.trainer_id }}
+</h5>
+
+</div>
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Phone
+</label>
+
+<h5>
+{{ trainer.phone|default:"-" }}
+</h5>
+
+</div>
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Email
+</label>
+
+<h5>
+{{ trainer.email|default:"-" }}
+</h5>
+
+</div>
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Experience
+</label>
+
+<h5>
+{{ trainer.experience|default:"0" }} Years
+</h5>
+
+</div>
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Joining Date
+</label>
+
+<h5>
+{{ trainer.joining_date|default:"-" }}
+</h5>
+
+</div>
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Salary
+</label>
+
+<h5>
+₹ {{ trainer.salary|default:"0" }}
+</h5>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<!-- Assigned Members -->
+
+
+<div class="row mt-4">
+
+
+<div class="col-xl-12">
+
+
+<div class="card">
+
+
+<div class="card-header d-flex justify-content-between align-items-center">
+
+
+<h4 class="card-title mb-0">
+Assigned Members
+</h4>
+
+
+<a href="{% url 'gymove:assign-member' trainer.trainer_id %}"
+class="btn btn-primary btn-sm">
+
++ Assign Member
+
+</a>
+
+
+</div>
+
+
+
+
+<div class="card-body">
+
+
+<div class="table-responsive">
+
+
+<table class="table table-hover">
+
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Phone</th>
+
+<th>Membership</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+
+{% for member in members %}
+
+
+<tr>
+
+
+<td>
+{{ member.member_id }}
+</td>
+
+
+
+<td>
+{{ member.full_name }}
+</td>
+
+
+
+<td>
+{{ member.phone }}
+</td>
+
+
+
+<td>
+{{ member.membership_plan_name|default:"-" }}
+</td>
+
+
+
+<td>
+
+
+{% if member.status == "Active" %}
+
+<span class="badge badge-success">
+Active
+</span>
+
+
+{% else %}
+
+<span class="badge badge-danger">
+{{ member.status }}
+</span>
+
+
+{% endif %}
+
+
+</td>
+
+
+
+<td>
+
+
+<a href="{% url 'gymove:remove-member-trainer' member.member_id %}"
+class="btn btn-danger btn-sm"
+onclick="return confirm('Remove member from trainer?');">
+
+Remove
+
+</a>
+
+
+</td>
+
+
+
+</tr>
+
+
+{% empty %}
+
+
+<tr>
+
+<td colspan="6" class="text-center">
+
+No Members Assigned
+
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+{% endblock %}

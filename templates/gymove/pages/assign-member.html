@@ -1,0 +1,101 @@
+{% extends 'gymove/elements/layouts/admin.html' %}
+
+{% block content %}
+
+<div class="content-body">
+
+<div class="container-fluid">
+
+<div class="card">
+
+
+<div class="card-header">
+
+<h4>
+Assign Member to {{ trainer.first_name }} {{ trainer.last_name }}
+</h4>
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+<div class="form-group">
+
+<label class="form-label">
+Select Member
+</label>
+
+
+{% if members %}
+
+
+<select name="member" class="form-control">
+
+
+{% for member in members %}
+
+<option value="{{ member.id }}">
+
+{{ member.first_name }} {{ member.last_name }} 
+({{ member.member_id }})
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+<br>
+
+
+<button type="submit" class="btn btn-primary">
+
+Assign Member
+
+</button>
+
+
+
+{% else %}
+
+
+<div class="alert alert-warning">
+
+No available members to assign.
+
+</div>
+
+
+
+{% endif %}
+
+
+</div>
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+{% endblock %}

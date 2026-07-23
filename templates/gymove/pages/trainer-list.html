@@ -1,0 +1,272 @@
+{% extends 'gymove/elements/layouts/admin.html' %}
+
+{% block content %}
+
+<div class="content-body default-height">
+
+<div class="container-fluid">
+
+
+<div class="row">
+
+<div class="col-xl-12">
+
+
+<div class="card">
+
+
+
+<div class="card-header d-flex justify-content-between align-items-center">
+
+
+<h4 class="card-title">
+Trainer List
+</h4>
+
+
+<a href="{% url 'gymove:add-trainer' %}" 
+class="btn btn-primary">
+
++ Add Trainer
+
+</a>
+
+
+</div>
+
+
+
+
+<div class="card-body">
+
+
+<div class="table-responsive">
+
+
+<table class="table table-responsive-md">
+
+
+<thead>
+
+<tr>
+
+<th>
+ID
+</th>
+
+<th>
+Name
+</th>
+
+<th>
+Specialization
+</th>
+
+<th>
+Experience
+</th>
+
+<th>
+Phone
+</th>
+
+<th>
+Status
+</th>
+
+<th>
+Action
+</th>
+
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+
+{% for trainer in trainers %}
+
+
+
+<tr>
+
+
+
+<td>
+
+{{ trainer.trainer_id|default:"-" }}
+
+</td>
+
+
+
+
+<td>
+
+<strong>
+
+{{ trainer.full_name|default:"-" }}
+
+</strong>
+
+</td>
+
+
+
+
+<td>
+
+{{ trainer.specialization|default:"-" }}
+
+</td>
+
+
+
+
+<td>
+
+{{ trainer.experience|default:"0" }} Years
+
+</td>
+
+
+
+
+<td>
+
+{{ trainer.phone|default:"-" }}
+
+</td>
+
+
+
+
+<td>
+
+
+{% if trainer.status == "Active" %}
+
+<span class="badge badge-success">
+Active
+</span>
+
+
+{% else %}
+
+<span class="badge badge-danger">
+Inactive
+</span>
+
+
+{% endif %}
+
+
+</td>
+
+
+
+
+<td>
+
+{% if trainer.trainer_id %}
+
+
+<a href="{% url 'gymove:trainer-profile' trainer.trainer_id %}"
+class="btn btn-sm btn-primary">
+
+View
+
+</a>
+
+
+<a href="{% url 'gymove:edit-trainer' trainer.trainer_id %}"
+class="btn btn-sm btn-warning">
+
+Edit
+
+</a>
+
+
+<a href="{% url 'gymove:delete-trainer' trainer.trainer_id %}"
+class="btn btn-sm btn-danger"
+onclick="return confirm('Delete this trainer?');">
+
+Delete
+
+</a>
+
+
+{% else %}
+
+
+<span class="text-danger">
+Invalid Trainer ID
+</span>
+
+
+{% endif %}
+
+</td>
+
+
+
+</tr>
+
+
+
+
+{% empty %}
+
+
+
+<tr>
+
+<td colspan="7" class="text-center">
+
+No Trainers Found
+
+</td>
+
+</tr>
+
+
+
+{% endfor %}
+
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+{% endblock %}

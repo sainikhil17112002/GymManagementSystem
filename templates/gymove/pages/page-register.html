@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+    {% load static custom_tags %}
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <meta name="robots" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Admin Sign Up</title>
+
+    <link rel="shortcut icon" type="image/png" href="{% static dz_array.public.favicon %}" />
+
+    {% for cssurl in dz_array.pagelevel.gymove.gymove_views.css|getdata:request.path %}
+    <link rel="stylesheet" href="{% static cssurl %}">
+    {% endfor %}
+
+    {% for cssurl in dz_array.global.css %}
+    <link rel="stylesheet" href="{% static cssurl %}">
+    {% endfor %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="h-100">
+
+<div class="authincation h-100">
+
+    <div class="container h-100">
+
+        <div class="row justify-content-center h-100 align-items-center">
+
+            <div class="col-md-7">
+
+                <div class="authincation-content">
+
+                    <div class="row no-gutters">
+
+                        <div class="col-xl-12">
+
+                            <div class="auth-form">
+
+                                <div class="text-center mb-3">
+                                    <img src="{% static 'gymove/images/logo-full.png' %}" alt="">
+                                </div>
+
+                                <h4 class="text-center mb-4">
+                                    Admin Sign Up
+                                </h4>
+
+                            <form method="POST">
+
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+        <label class="mb-1 form-label">Username</label>
+        <input
+            type="text"
+            name="username"
+            class="form-control"
+            placeholder="Enter username"
+            required
+        >
+    </div>
+
+    <div class="form-group mb-3">
+        <label class="mb-1 form-label">Email</label>
+        <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="Enter email"
+            required
+        >
+    </div>
+
+    <div class="form-group mb-3">
+        <label class="mb-1 form-label">Password</label>
+        <input
+            type="password"
+            name="password"
+            class="form-control"
+            placeholder="Enter password"
+            required
+        >
+    </div>
+
+    <div class="form-group mb-3">
+        <label class="mb-1 form-label">Confirm Password</label>
+        <input
+            type="password"
+            name="confirm_password"
+            class="form-control"
+            placeholder="Confirm password"
+            required
+        >
+    </div>
+
+    <div class="text-center mt-4">
+        <button
+            type="submit"
+            class="btn btn-primary light btn-block"
+        >
+            Create Admin Account
+        </button>
+    </div>
+
+</form>
+
+                                <div class="new-account mt-3 text-center">
+                                    <p>
+                                        Already have an account?
+                                        <a href="{% url 'gymove:page-login' %}" class="text-primary">
+                                            Sign In
+                                        </a>
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% for jsurl in dz_array.global.js.top %}
+<script src="{% static jsurl %}"></script>
+{% endfor %}
+
+{% for jsurl in dz_array.pagelevel.gymove.gymove_views.js|getdata:request.path %}
+<script src="{% static jsurl %}"></script>
+{% endfor %}
+
+{% for jsurl in dz_array.global.js.bottom %}
+<script src="{% static jsurl %}"></script>
+{% endfor %}
+
+</body>
+</html>

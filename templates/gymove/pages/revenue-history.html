@@ -1,0 +1,342 @@
+{% extends 'gymove/elements/layouts/admin.html' %}
+{% load static %}
+
+
+{% block content %}
+
+
+<div class="content-body default-height">
+
+<div class="container-fluid">
+
+
+<div class="row">
+
+
+<!-- Current Month -->
+
+<div class="col-xl-6">
+
+<div class="card">
+
+
+<div class="card-header">
+<h4 class="card-title">
+Current Month
+</h4>
+</div>
+
+
+<div class="card-body">
+
+<h3>
+{{ current_month.month }}
+{{ current_month.year }}
+</h3>
+
+
+<p>
+Status:
+{{ current_month.status }}
+</p>
+
+
+<p>
+Revenue:
+₹{{ current_month.total_revenue }}
+</p>
+
+
+<p>
+Expense:
+₹{{ current_month.total_expense }}
+</p>
+
+
+<p>
+Profit:
+₹{{ current_month.net_profit }}
+</p>
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<!-- Closed Months -->
+
+
+<div class="col-xl-6">
+
+<div class="card">
+
+
+<div class="card-header">
+<h4 class="card-title">
+Closed Months
+</h4>
+</div>
+
+
+<div class="card-body">
+
+
+{% for month in closed_months %}
+
+<p>
+{{ month.month }} {{ month.year }}
+-
+{{ month.status }}
+</p>
+
+
+{% empty %}
+
+<p>
+No closed months yet.
+</p>
+
+
+{% endfor %}
+
+
+</div>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- Payment Transactions -->
+
+
+<div class="card mt-4">
+
+
+<div class="card-header">
+<h4 class="card-title">
+Payment Transactions
+</h4>
+</div>
+
+
+<div class="card-body">
+
+
+<table class="table">
+
+
+<thead>
+
+<tr>
+<th>Member</th>
+<th>Plan</th>
+<th>Amount</th>
+<th>Date</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+
+<tbody>
+
+
+{% for payment in transactions %}
+
+<tr>
+
+<td>
+{{ payment.member }}
+</td>
+
+
+<td>
+{{ payment.plan }}
+</td>
+
+
+<td>
+₹{{ payment.amount }}
+</td>
+
+
+<td>
+{{ payment.date }}
+</td>
+
+
+<td>
+{{ payment.status }}
+</td>
+
+
+</tr>
+
+
+{% empty %}
+
+<tr>
+<td colspan="5">
+No payments found
+</td>
+</tr>
+
+
+{% endfor %}
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- Expense History -->
+
+
+<div class="card mt-4">
+
+
+<div class="card-header">
+
+<h4 class="card-title">
+Expense History
+</h4>
+
+</div>
+
+
+<div class="card-body">
+
+
+<table class="table">
+
+
+<thead>
+
+<tr>
+
+<th>
+Title
+</th>
+
+<th>
+Category
+</th>
+
+<th>
+Amount
+</th>
+
+<th>
+Date
+</th>
+
+<th>
+Action
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody>
+
+
+{% for expense in expenses %}
+
+
+<tr>
+
+<td>
+{{ expense.title }}
+</td>
+
+
+<td>
+{{ expense.category }}
+</td>
+
+
+<td>
+₹{{ expense.amount }}
+</td>
+
+
+<td>
+{{ expense.date }}
+</td>
+
+<td>
+
+<a href="{% url 'gymove:delete-expense' forloop.counter0 %}"
+class="btn btn-danger btn-sm">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+
+{% empty %}
+
+
+<tr>
+
+<td colspan="4">
+No expenses found
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+</div>
+
+
+{% endblock %}

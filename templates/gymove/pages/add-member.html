@@ -1,0 +1,325 @@
+{% extends 'gymove/elements/layouts/admin.html' %}
+
+{% block content %}
+
+<div class="content-body">
+<div class="container-fluid">
+
+
+<div class="card">
+
+
+<div class="card-header">
+
+<h4 class="card-title">
+Add Member
+</h4>
+
+</div>
+
+
+
+<div class="card-body">
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+<div class="row">
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Member ID
+</label>
+
+<input 
+type="text"
+name="member_id"
+class="form-control"
+required>
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+First Name
+</label>
+
+<input 
+type="text"
+name="first_name"
+class="form-control"
+required>
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Last Name
+</label>
+
+<input 
+type="text"
+name="last_name"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Gender
+</label>
+
+<select 
+name="gender"
+class="form-control">
+
+<option value="Male">
+Male
+</option>
+
+<option value="Female">
+Female
+</option>
+
+<option value="Other">
+Other
+</option>
+
+</select>
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Date of Birth
+</label>
+
+<input 
+type="date"
+name="date_of_birth"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Phone
+</label>
+
+<input 
+type="text"
+name="phone"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Email
+</label>
+
+<input 
+type="email"
+name="email"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Emergency Contact
+</label>
+
+<input 
+type="text"
+name="emergency_contact"
+class="form-control">
+
+</div>
+
+
+
+
+<div class="col-md-12 mb-3">
+
+<label>
+Address
+</label>
+
+<textarea
+name="address"
+class="form-control"
+rows="3"></textarea>
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Joining Date
+</label>
+
+<input 
+type="date"
+name="join_date"
+class="form-control"
+required>
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Trainer
+</label>
+
+
+<select
+name="trainer_id"
+class="form-control">
+
+
+<option value="">
+Select Trainer
+</option>
+
+
+{% for trainer in trainers %}
+
+<option value="{{ trainer.trainer_id }}">
+
+{{ trainer.full_name }}
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+
+<div class="col-md-6 mb-3">
+
+<label>
+Membership Plan
+</label>
+
+
+<select 
+name="membership_plan"
+class="form-control"
+required>
+
+
+<option value="">
+Select Plan
+</option>
+
+
+{% for plan in plans %}
+
+
+<option value="{{ plan.plan_id }}">
+
+{{ plan.plan_name }}
+-
+₹{{ plan.price }}
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+<button 
+type="submit"
+class="btn btn-primary">
+
+Save Member
+
+</button>
+
+
+
+<a 
+href="{% url 'gymove:member-list' %}"
+class="btn btn-light">
+
+Cancel
+
+</a>
+
+
+
+</form>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+</div>
+
+
+{% endblock %}
