@@ -292,21 +292,6 @@ def index_2(request):
 
 
 
-@login_required_json
-def index_2(request):
-
-    context = {
-        "page_title": "Dashboard",
-    }
-
-    return render(
-        request,
-        "gymove/index-2.html",
-        context,
-    )
-
-
-
 
 # ==========================================================
 # STATIC PAGES
