@@ -267,6 +267,8 @@ def index(request):
 
         "latest_announcements": latest_announcements,
 
+        "expired_members": expired_members,
+
     }
 
 
@@ -289,6 +291,7 @@ def index_2(request):
         "gymove/index-2.html",
         context,
     )
+
 
 
 

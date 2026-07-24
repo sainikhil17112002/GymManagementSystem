@@ -43599,7 +43599,7 @@ color:rgba(255,255,255,0.7)
 
 /* Announcement scroll */
 .announcement-scroll {
-    max-height: 350px;
+    height: 280px;
     overflow-y: auto;
 }
 
@@ -43607,18 +43607,39 @@ color:rgba(255,255,255,0.7)
     height: 350px;
 }
 
-.announcement-scroll {
-    height: 280px;
-    overflow-y: auto;
-}
 
+/* Membership Expiring Scroll */
+.featuredMenu {
+    overflow: hidden;
+}
 
 .membership-scroll {
-    height: 280px;
+    max-height: 360px;
     overflow-y: auto;
+    padding-bottom: 10px;
 }
 
 
+/* Footer View All Button */
+.featuredMenu .card-footer {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    position: relative !important;
+    background: #101118;
+    z-index: 10;
+    height: 70px;
+}
+
+
+/* Button fix */
+.featuredMenu .card-footer .btn {
+    min-width: 120px;
+    white-space: nowrap;
+}
+
+
+/* Expired Membership Card */
 .expired-effect {
     background: #dc2626 !important;
 }
@@ -43627,15 +43648,27 @@ color:rgba(255,255,255,0.7)
     background: #dc2626 !important;
 }
 
-
 .expired-card .expired-effect {
-    background: #dc2626 !important;
-}
-
-.expired-card .expired-progress {
     background: #dc2626 !important;
 }
 
 .expired-card .activity-icon {
     background: rgba(220,38,38,0.15);
+}
+
+/* Membership Expiring Header spacing */
+.featuredMenu .card-header {
+    padding-bottom: 20px !important;
+}
+
+
+/* Add gap before first member */
+.featuredMenu .membership-scroll {
+    padding-top: 10px !important;
+}
+
+
+/* Member item spacing */
+.featuredMenu .media {
+    margin-bottom: 25px !important;
 }

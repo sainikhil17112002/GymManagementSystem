@@ -248,8 +248,7 @@ View More
 <div class="card text-center">
 
 
-<div class="card-body announcement-scroll">
-
+<div class="card-body">
 
 {% if trainer.photo %}
 
@@ -366,16 +365,23 @@ No Active Trainers Found
 
     <div class="card featuredMenu">
 
-        <div class="card-header border-0">
+        <div class="card-header d-flex justify-content-between align-items-center border-0 pb-0">
 
-            <h4 class="text-black font-w600 fs-20 mb-0">
-                Membership Expiring Soon
-            </h4>
+    <h4 class="text-black font-w600 fs-20 mb-0">
+        Membership Status
+    </h4>
 
-        </div>
+    <a href="{% url 'gymove:member-list' %}"
+       class="text-primary fs-14">
+        VIEW ALL
+    </a>
+
+</div>
+
+      
 
 
-        <div class="card-body membership-scroll pt-0">
+        <div class="card-body pt-0 membership-scroll">
 
 
             {% for member in expiring_members %}
@@ -485,27 +491,6 @@ No Active Trainers Found
         </div>
 
 
-
-        <div class="card-footer style-1 text-center border-0 pt-0 pb-4">
-
-    <a class="text-primary fa fa-chevron-down"
-       href="javascript:void(0);"
-       onclick="scrollMembership();">
-    </a>
-
-</div>
-<script>
-function scrollMembership() {
-
-    const box = document.querySelector('.featuredMenu .membership-scroll');
-
-    if (box) {
-        box.scrollTop += 250;
-    }
-
-}
-</script>
-
     </div>
 
 </div>
@@ -585,8 +570,8 @@ jQuery(window).on('load',function(){
     },1000);
 
 
-var revenueMonths = {{ revenue_chart.months|default:"[]"|safe }};
-var revenueValues = {{ revenue_chart.revenue|default:"[]"|safe }};
+var revenueMonths = {{ revenue_chart.months|default:"[]"| safe }};
+var revenueValues = {{ revenue_chart.revenue|default:"[]"| safe }};
 
 
 console.log(revenueMonths);

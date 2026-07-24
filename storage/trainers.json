@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "trainer_id": "68786",
+        "full_name": "Sai nikhil Gollavilli",
+        "gender": "Male",
+        "phone": "09505579643",
+        "email": "sainikhil17112002@gmail.com",
+        "specialization": "gym",
+        "experience": "4",
+        "salary": "22000",
+        "joining_date": "2026-07-24",
+        "status": "Active"
+    }
+]
