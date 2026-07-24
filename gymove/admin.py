@@ -28,3 +28,27 @@ class MemberAdmin(admin.ModelAdmin):
         "status",
         "gender",
     )
+
+
+
+from .models import Announcement
+
+@admin.register(Announcement)
+class AnnouncementAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "is_featured",
+        "is_active",
+        "created_by",
+        "created_at",
+    )
+
+    list_filter = (
+        "is_featured",
+        "is_active",
+    )
+
+    search_fields = (
+        "title",
+        "description",
+    )

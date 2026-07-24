@@ -5,6 +5,7 @@
 {% endblock %}
 		
 {% block content %}
+
 <!--**********************************
 	Content body start
 ***********************************-->
@@ -12,8 +13,10 @@
 	<!-- row -->
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-xl-6 col-xxl-12">
-				<div class="row">
+
+<!-- LEFT SIDE -->
+<div class="col-xl-8">
+    <div class="row">
 					<div class="col-sm-6">
 						<div class="card avtivity-card">
 							<div class="card-body">
@@ -126,109 +129,83 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-xl-6 col-xxl-12">
-    <div class="card">
-
-        <div class="card-header d-flex justify-content-between align-items-center pt-3 pb-2 px-4 border-0">
-
-            <div>
-               <h4 class="text-white fs-20 fw-semibold mb-0">
-                    Revenue Growth
-                </h4>
-
-            
-            </div>
 
 
-            <div class="d-flex align-items-center gap-2">
+<!-- ===================== ANNOUNCEMENTs ===================== -->
 
-                <!-- Monthly Dropdown -->
-                <div class="dropdown">
+<div class="col-xl-4 col-lg-4">
 
-                    <button type="button"
-                    class="btn rounded btn-primary light"
-                    data-bs-toggle="dropdown">
+   <div class="card announcement-card">
 
-                        <i class="fa fa-chart-line me-2"></i>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="text-black font-w600 fs-20 mb-0">
+                📢 Latest Announcements
+            </h4>
 
-                        Monthly
-
-                        <i class="fa fa-chevron-down ms-2"></i>
-
-                    </button>
-
-
-                    <div class="dropdown-menu dropdown-menu-end">
-
-                        <a class="dropdown-item" href="#">
-                            Monthly
-                        </a>
-
-                        <a class="dropdown-item" href="#">
-                            Yearly
-                        </a>
-
-                        <a class="dropdown-item" href="#">
-                            Profit
-                        </a>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Download Button -->
-                <button type="button"
-id="downloadRevenueChart"
-class="btn rounded btn-primary light">
-
-                    <i class="fa fa-download"></i>
-
-                </button>
-
-
-            </div>
-
-
+            <a href="{% url 'gymove:announcement-history' %}" class="text-primary">
+    VIEW ALL
+</a>
         </div>
 
+        <div class="card-body announcement-scroll">
 
+    {% if latest_announcements %}
 
-        <div class="card-body px-4 pt-2 pb-3">
+        {% for announcement in latest_announcements %}
 
-            <div class="mb-1">
+            {% if announcement.is_featured %}
+                <span class="badge badge-warning mb-2">
+                    Featured
+                </span>
+            {% endif %}
 
-                <h2 class="text-white fw-bold mb-2" style="font-size:1.8rem; line-height:1;">
-    ₹{{ month_revenue }}
-</h2>
+            <h5>
+                {{ announcement.title }}
+            </h5>
 
-            </div>
+            <p class="text-muted">
+                {{ announcement.description|truncatewords:25 }}
+            </p>
 
+            <small class="text-muted">
+                {{ announcement.created_at|date:"d M Y" }}
+            </small>
 
-            <div id="chartBar"></div>
+            <hr>
 
+        {% endfor %}
 
-        </div>
+    {% else %}
 
+        <p class="text-muted">
+            No announcements available.
+        </p>
+
+    {% endif %}
+
+</div>
 
     </div>
+
+
+    
 </div>
 
 
-<div class="col-xl-9 col-xxl-4">
+<!-- ===================== SECOND ROW ===================== -->
+<div class="row mt-4">
 
-<div class="row">
+    <!-- Recommended Trainer -->
+    <div class="col-xl-8">
 
+        <div class="row">
+            <div class="col-xl-12">
 
-<div class="col-xl-12">
+                <div class="card">
 
-<div class="card">
+                    <div class="card-header d-sm-flex d-block pb-0 border-0">
 
-
-<div class="card-header d-sm-flex d-block pb-0 border-0">
-
-
-<div class="me-auto pe-3">
+                        <div class="me-auto pe-3">
 
 <h4 class="text-black font-w600 fs-20">
 Recommended Trainer for You
@@ -270,7 +247,7 @@ View More
 <div class="card text-center">
 
 
-<div class="card-body">
+<div class="card-body announcement-scroll">
 
 
 {% if trainer.photo %}
@@ -377,88 +354,14 @@ No Active Trainers Found
 </div>
 
 
-
-
-
-<div class="col-xl-12">
-
-
-<div class="card">
-
-
-<div class="card-header d-sm-flex d-block pb-0 border-0">
-
-
-<div class="me-auto pe-3">
-
-<h4 class="text-black fs-20 font-w600">
-Calories Chart
-</h4>
-
-
-<p class="fs-13 mb-0">
-Lorem ipsum dolor sit amet, consectetur
-</p>
-
-
-</div>
-
-
-
-<select class="default-select w-auto">
-
-<option selected>
-Weekly
-</option>
-
-
-<option>
-Monthly
-</option>
-
-
-<option>
-Daily
-</option>
-
-
-<option>
-Yearly
-</option>
-
-
-</select>
-
-
-</div>
-
-
-
-<div class="card-body px-3 pb-0">
-
-<div id="chartTimeline"></div>
-
-</div>
-
-
-
 </div>
 
 
 </div>
 
 
-
-</div>
-
-
-</div>
-			
- 
-
-
-			
-<div class="col-xl-3 col-xxl-4">
+<!-- Membership Expiring Soon -->
+<div class="col-xl-4">
 
     <div class="card featuredMenu">
 
@@ -471,7 +374,7 @@ Yearly
         </div>
 
 
-        <div class="card-body loadmore-content height700 dz-scroll pt-0">
+        <div class="card-body membership-scroll pt-0">
 
 
             {% for member in expiring_members %}
@@ -505,8 +408,8 @@ Yearly
 
                     <h5>
 
-                        <a href="{% url 'gymove:member-profile' member.id %}"
-                           class="text-black fs-16">
+                        <a href="{% url 'gymove:member-profile' member.member_id %}"
+   class="text-black fs-16">
 
                             Membership Expiring Soon
 
@@ -584,12 +487,23 @@ Yearly
 
         <div class="card-footer style-1 text-center border-0 pt-0 pb-4">
 
-            <a class="text-primary fa fa-chevron-down"
-               href="javascript:void(0);">
-            </a>
+    <a class="text-primary fa fa-chevron-down"
+       href="javascript:void(0);"
+       onclick="scrollMembership();">
+    </a>
 
-        </div>
+</div>
+<script>
+function scrollMembership() {
 
+    const box = document.querySelector('.featuredMenu .membership-scroll');
+
+    if (box) {
+        box.scrollTop += 250;
+    }
+
+}
+</script>
 
     </div>
 

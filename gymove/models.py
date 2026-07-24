@@ -321,3 +321,31 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.username
+
+
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Announcement(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+
+    is_featured = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-is_featured', '-created_at']
+
+    def __str__(self):
+        return self.title

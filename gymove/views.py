@@ -73,3 +73,75 @@ def remove_profile_photo(request):
     return JsonResponse({
         "success": False
     })
+
+
+from datetime import datetime, timedelta
+
+def notifications(request):
+    members = Storage.read("members.json")
+
+    # Latest joined members
+    new_members = sorted(
+        members,
+        key=lambda x: x.get("join_date", ""),
+        reverse=True
+    )
+
+    # Members expiring within 7 days
+    today = datetime.today().date()
+    expiring_members = []
+
+    for member in members:
+        expiry = member.get("membership_expiry_date")
+
+        if expiry:
+            try:
+                expiry_date = datetime.strptime(
+                    expiry,
+                    "%Y-%m-%d"
+                ).date()
+
+                days = (expiry_date - today).days
+
+                if 0 <= days <= 7:
+                    member["days_left"] = days
+                    expiring_members.append(member)
+
+            except ValueError:
+                pass
+
+    context = {
+        "page_title": "Notifications",
+        "new_members": new_members,
+        "expiring_members": expiring_members,
+    }
+
+    return render(
+        request,
+        "gymove/notifications.html",
+        context,
+    )
+
+
+def notifications(request):
+    members = Storage.read("members.json")
+
+    new_members = sorted(
+        members,
+        key=lambda x: x.get("join_date", ""),
+        reverse=True
+    )
+
+    expiring_members = []
+
+    context = {
+        "page_title": "Notifications",
+        "new_members": new_members,
+        "expiring_members": expiring_members,
+    }
+
+    return render(
+        request,
+        "gymove/pages/notifications.html",
+        context,
+    )

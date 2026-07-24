@@ -10,6 +10,7 @@ urlpatterns = [
     path('', gymove_views.index, name="index"),
     path('index/', gymove_views.index, name="index"),
     path('index_2/', gymove_views.index_2, name="index_2"),
+    path("notifications/", views.notifications, name="notifications"),
 
 
     path('app-profile/', gymove_views.app_profile, name="app-profile"),
@@ -28,8 +29,23 @@ urlpatterns = [
     path('chart-morris/', gymove_views.chart_morris, name="chart-morris"),
 
 
-    path('content/', gymove_views.content, name="content"),
-    path('add_content/', gymove_views.add_content, name="add_content"),
+   path('content/', gymove_views.content, name="content"),
+   path(
+    'announcement-history/',
+    gymove_views.announcement_history,
+    name="announcement-history"
+),
+path('add_content/', gymove_views.add_content, name="add_content"),
+
+# ======================
+# ANNOUNCEMENTS
+# ======================
+
+path(
+    'create-announcement/',
+    gymove_views.create_announcement,
+    name="create-announcement"
+),
 
 
     path('uc-lightgallery/', gymove_views.uc_lightgallery, name="uc-lightgallery"),
@@ -219,5 +235,11 @@ path(
     gymove_views.delete_expense,
     name="delete-expense"
 ),
+
+path(
+    "notifications/",
+    views.notifications,
+    name="notifications",
+)
 
 ]

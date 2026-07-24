@@ -13,6 +13,7 @@ from .forms import (
 
 from .models import (
     UserProfile,
+    Announcement,
 )
 
 from .storage import Storage
@@ -190,6 +191,12 @@ def index(request):
 
     expiring_members = []
 
+    new_members = sorted(
+    members,
+    key=lambda x: x.get("join_date", ""),
+    reverse=True
+)[:5]
+
 
     for member in members:
 
@@ -215,7 +222,21 @@ def index(request):
         except:
             continue
 
+        print("=" * 50)
+        print("Total members:", len(members))
+        print("New members:", len(new_members))
+        print(new_members)
+        print("=" * 50)
 
+
+
+
+    latest_announcements = Announcement.objects.filter(
+    is_active=True
+).order_by(
+    "-is_featured",
+    "-created_at"
+)
 
     context = {
 
@@ -237,8 +258,11 @@ def index(request):
 
         "expiring_members": expiring_members,
 
-    }
+        "new_members": new_members,
 
+        "latest_announcements": latest_announcements,
+
+    }
 
 
     return render(
@@ -511,10 +535,24 @@ def feather_icons(request):
         },
     )
 
-
 # ==========================================================
 # CMS
 # ==========================================================
+
+def announcement_history(request):
+
+    announcements = Announcement.objects.all().order_by(
+        "-created_at"
+    )
+
+    return render(
+        request,
+        "gymove/pages/announcement_history.html",
+        {
+            "announcements": announcements,
+            "page_title": "Announcement History",
+        },
+    )
 
 def content(request):
     return render(
@@ -525,6 +563,27 @@ def content(request):
         },
     )
 
+def create_announcement(request):
+
+    if request.method == "POST":
+
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+
+        Announcement.objects.create(
+            title=title,
+            description=description,
+            is_active=True,
+            is_featured=False,
+        )
+
+        return redirect("gymove:index")
+
+
+    return render(
+        request,
+        "gymove/pages/create_announcement.html"
+    )
 
 def add_content(request):
     return render(
@@ -544,7 +603,6 @@ def menu(request):
             "page_title": "Menu",
         },
     )
-
 
 def email_template(request):
     return render(

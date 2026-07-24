@@ -43597,3 +43597,23 @@ color:rgba(255,255,255,0.7)
 
 }
 
+/* Announcement scroll */
+.announcement-scroll {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.announcement-card {
+    height: 350px;
+}
+
+.announcement-scroll {
+    height: 280px;
+    overflow-y: auto;
+}
+
+
+.membership-scroll {
+    height: 280px;
+    overflow-y: auto;
+}

@@ -1,0 +1,61 @@
+{% extends 'gymove/elements/layouts/admin.html' %}
+
+{% block content %}
+
+<div class="content-body default-height">
+
+<div class="container-fluid">
+
+<div class="card">
+
+<div class="card-header">
+    <h4 class="text-black font-w600">
+        📢 Announcement History
+    </h4>
+</div>
+
+
+<div class="card-body">
+
+
+{% if announcements %}
+
+{% for announcement in announcements %}
+
+<div class="border-bottom mb-3 pb-3">
+
+    <h5>
+        {{ announcement.title }}
+    </h5>
+
+    <p class="text-muted">
+        {{ announcement.description }}
+    </p>
+
+    <small class="text-muted">
+        {{ announcement.created_at|date:"d M Y" }}
+    </small>
+
+</div>
+
+{% endfor %}
+
+
+{% else %}
+
+<p class="text-muted">
+No announcements found.
+</p>
+
+{% endif %}
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
