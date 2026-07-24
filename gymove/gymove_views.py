@@ -190,6 +190,7 @@ def index(request):
 
 
     expiring_members = []
+    expired_members = []
 
     new_members = sorted(
     members,
@@ -202,10 +203,8 @@ def index(request):
 
         expiry = member.get("membership_expiry_date")
 
-
         if not expiry:
             continue
-
 
         try:
 
@@ -217,6 +216,10 @@ def index(request):
 
             if today_date <= expiry_date <= next_7_days:
                 expiring_members.append(member)
+
+
+            elif expiry_date < today_date:
+                expired_members.append(member)
 
 
         except:
@@ -245,6 +248,8 @@ def index(request):
         "total_members": total_members,
 
         "active_members": active_members,
+
+        "expired_members_count": len(expired_members),
 
         "total_trainers": total_trainers,
 

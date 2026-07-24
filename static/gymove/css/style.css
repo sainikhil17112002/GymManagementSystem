@@ -43617,3 +43617,25 @@ color:rgba(255,255,255,0.7)
     height: 280px;
     overflow-y: auto;
 }
+
+
+.expired-effect {
+    background: #dc2626 !important;
+}
+
+.expired-red {
+    background: #dc2626 !important;
+}
+
+
+.expired-card .expired-effect {
+    background: #dc2626 !important;
+}
+
+.expired-card .expired-progress {
+    background: #dc2626 !important;
+}
+
+.expired-card .activity-icon {
+    background: rgba(220,38,38,0.15);
+}

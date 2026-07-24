@@ -83,5 +83,22 @@
         "membership_expiry_date": "2026-08-05",
         "status": "Active",
         "trainer_id": ""
+    },
+    {
+        "member_id": "9999",
+        "first_name": "Test",
+        "last_name": "Expired",
+        "full_name": "Test Expired",
+        "gender": "Male",
+        "date_of_birth": "1995-01-01",
+        "phone": "5555555555",
+        "email": "expired@test.com",
+        "address": "Rajahmundry",
+        "emergency_contact": "",
+        "join_date": "2026-06-01",
+        "membership_plan": "1711",
+        "membership_expiry_date": "2026-07-20",
+        "status": "Active",
+        "trainer_id": ""
     }
 ]
